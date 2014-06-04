@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Set this to the main language of your site -->
+<head>
+	<!-- Universal -->
+	<meta charset="utf-8">
+
+	<!-- Define a viewport to mobile devices to use - telling the browser to assume that the page is as wide as the device (width=device-width) and setting the initial page zoom level to be 1 (initial-scale=1.0) -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- JQuery -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+	<!-- Bootstrap -->
+	<!-- Latest compiled and minified CSS -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	<!-- Include the site stylesheet -->
+	<link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet">
+
+	<script src="{{url_for('static',filename='js/hello.js')}}"></script>
+
+	{% block js %}{% endblock %}
+
+	<title>{% block title %}M&T Project{% endblock %}</title>
+
+	<meta name="description" content="Methods and Tools Project">
+</head>
+<body>
+
+	<h1 align="center">Hello, World!</h1>
+
+</body>
+</html>
