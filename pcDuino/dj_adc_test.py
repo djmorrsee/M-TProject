@@ -1,7 +1,7 @@
 import time
 from adc import analog_read
 
-VOLT = 3.0
+VOLT = 3.3
 
 TEMP_PIN = 3
 LIGHT_PIN = 2
