@@ -4,32 +4,51 @@
 <head>
 	<!-- Universal -->
 	<meta charset="utf-8">
-
-	<!-- Define a viewport to mobile devices to use - telling the browser to assume that the page is as wide as the device (width=device-width) and setting the initial page zoom level to be 1 (initial-scale=1.0) -->
+	<meta name="description" content="Methods and Tools Project">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Title Block -->
+	<title>{% block title %}MT Project{% endblock %}</title>
 
 	<!-- JQuery -->
 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+	<!-- JQPlot -->
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot.cursor.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot.logAxisRenderer.min.js')}}"></script>
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jqplot.min.css')}}" />
+
 	<!-- Bootstrap -->
-	<!-- Latest compiled and minified CSS -->
 	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-	<!-- Latest compiled and minified JavaScript -->
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-	<!-- Include the site stylesheet -->
+
+	<!-- Site Style Sheet -->
 	<link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet">
 
-	<script src="{{url_for('static',filename='js/hello.js')}}"></script>
+	<!-- Site JS -->
+	<script src="{{ url_for('static', filename='js/plots.js' )}}"></script>
 
+	<!-- JS Block -->
 	{% block js %}{% endblock %}
 
-	<title>{% block title %}M&T Project{% endblock %}</title>
 
-	<meta name="description" content="Methods and Tools Project">
 </head>
 <body>
 
-	<h1 align="center">Hello, World!</h1>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h1 align="center">Hello, World!</h1>
+		</div>
+
+		<div class="panel-body" align="center">
+			<div class="col-xs-4" id="test-chart0" style="height:500px;"></div>
+			<div class="col-xs-4" id="test-chart1" style="height:500px;"></div>
+			<div class="col-xs-4" id="test-chart2" style="height:500px;"></div>
+			<div class="col-xs-4" id="test-chart3" style="height:500px;"></div>
+		</div>
+	</div>
 
 </body>
 </html>
