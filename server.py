@@ -6,5 +6,11 @@ app = Flask(__name__)
 def home():
 	return render_template('base.html')
 
+@app.route('/echo/', methods=['POST'])
+def echo():
+	if request.method == 'POST':
+		print(request.data)
+	return ''
+
 if __name__ == '__main__':
 	app.run(debug=True)

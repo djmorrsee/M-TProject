@@ -3,7 +3,7 @@ Methods and Tools Project
 
 ## Daniel Morrissey and Andrey Shprengel
 
-## About
+### About
 
 We are aiming to develop a system of 'modules,' which are microcontrollers equipped
 with temperature and light sensors. These modules will take their readings and send them
