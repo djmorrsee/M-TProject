@@ -1,27 +1,36 @@
 from flask import Flask, render_template, request
-from bin.db.db_schema import app, db, ModuleReading, ResetTable
+from bin.db.db_schema import *
+from bin.db.db_actions import *
 import json
 
-name = "None"
-temp = "None"
+from pprint import pprint
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + 'db/db01.db'
+db = SQLAlchemy(app)
+
 @app.route('/')
 def home():
-  return render_template('base.html', temp = temp)
+  r = GetReadings()
+  return render_template('base.html', temp = ModuleReading.query.count())
 
-@app.route('/dj_echo/', methods=['POST'])
-def dj_echo():
-	if request.method == 'POST':
-		print(request.data)
-	return ''
-
-@app.route('/echo/', methods = ['POST'])
-def echo():
-  global temp
+@app.route('/post_reading', methods=['POST'])
+def post_reading():
   if request.method == 'POST':
-    print temp
-    temp= request.json['temp']
-    return "succes"
+    data = json.loads(request.data)
+
+    if 'light' in data and 'temp' in data and 'm_id' in data:
+      light = data['light']
+      temp = data['temp']
+      m_id = data['m_id']
+    else:
+      print('INVALID DATA!')
+      return None
+
+    new_reading = ModuleReading(light, temp, m_id)
+    AddReading(new_reading)
+
+  return ''
 
 if __name__ == '__main__':
-  ResetTable()
   app.run(debug=True)

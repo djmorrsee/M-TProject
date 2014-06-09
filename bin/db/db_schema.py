@@ -8,8 +8,6 @@ import __main__ as main
 
 app = Flask(__name__)
 db_path = os.path.join(os.path.dirname(os.path.abspath(main.__file__)), 'db/db01.db')
-print(db_path)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + db_path
 
 db = SQLAlchemy(app)
@@ -27,12 +25,3 @@ class ModuleReading(db.Model):
     self.light = _light
     self.temp = _temp
     self._m_id = _m_id
-
-def ResetTable():
-  db.drop_all()
-  db.create_all()
-
-def AddDummyReading():
-  r = ModuleReading(100, 100, 1)
-  db.session.add(r)
-  db.session.commit()
