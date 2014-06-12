@@ -14,7 +14,7 @@ import __main__ as main
 
 app = Flask(__name__)
 #db_path = os.path.join(os.path.dirname(os.path.abspath(main.__file__)), 'db/db01.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + db_path
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 db = SQLAlchemy(app)
 
