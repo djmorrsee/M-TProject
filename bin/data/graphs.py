@@ -9,7 +9,7 @@ import json
 def DictionaryForModules ():
   ms_dict = {}
   for _id in GetModuleIDs():
-    label = 'module_' + str(_id)
+    label = str(_id)
     module_dict = DictionaryFromReadings(GetReadings(_id))
     ms_dict.update({label:module_dict})
 

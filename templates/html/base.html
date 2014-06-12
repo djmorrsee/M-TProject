@@ -60,7 +60,7 @@
 
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h2>Current Readings {{term}}</h2>
+						<h2>Current Readings</h2>
 					</div>
 
 					<div class="panel-body">
@@ -74,25 +74,19 @@
 						</div>
 
 						<!-- Loop Over All Modules' Most Recent Readings -->
-						{% for r in s_readings %}
-
-							<div class="col-xs-3"><p>{{r.m_id}}</p></div>
-
-							<div class="col-xs-4">
-								<p>{{r.temp}}</p>
-							</div>
-							<div class="col-xs-4">
-								<p>{{r.light}}</p>
-							</div>
-						{% endfor %}
+						<div id="reading-table"></div>
 					</div>
 
 				</div>
 
 				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h2>Historical Readings</h2>
+					</div>
 					<div class="panel-body">
 						<div class="col-xs-12" id="test-chart" style="height:500px;"></div>
 					</div>
+
 				</div>
 			</div>
 		</div>

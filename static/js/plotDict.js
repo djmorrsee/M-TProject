@@ -94,7 +94,7 @@ function FormatSeriesDefaults () {
     shadowOffset: .25,
     shadowDepth: 5,
     shadowAlpha: 1,
-    renderOptions: {
+    rendererOptions: {
       smooth:true
     }
   }
