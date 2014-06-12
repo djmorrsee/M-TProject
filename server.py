@@ -11,7 +11,7 @@ import json
 from pprint import pprint
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + 'db/db01.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
 @app.route('/')
@@ -48,6 +48,6 @@ def get_plotDict_script():
   return v
 
 if __name__ == '__main__':
-  AddDummyPopulation(2)
+  
   print('Initialized: Waiting for Connections!')
   app.run(debug=True)
