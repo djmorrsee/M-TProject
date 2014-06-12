@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Set this to the main language of your site -->
+<head>
+	<!-- Universal -->
+	<meta charset="utf-8">
+	<meta name="description" content="Methods and Tools Project">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Title Block -->
+	<title>{% block title %}MT Project{% endblock %}</title>
+
+	<!-- JQuery -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+	<!-- JQPlot -->
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot/jqplot.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot/cursor.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot/highlighter.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot/dateAxisRenderer.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot/trendline.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot/canvasTextRenderer.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot/canvasAxisLabelRenderer.min.js')}}"></script>
+	<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jqplot/canvasAxisTickRenderer.min.js')}}"></script>
+
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jqplot.min.css')}}" />
+
+	<!-- Bootstrap -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+	<!-- Site Style Sheet -->
+	<link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet">
+
+	<!-- Site JS -->
+	<script src="{{ url_for('static', filename='js/plotDict.js' )}}"></script>
+	<script src="{{ url_for('static', filename='js/plots.js' )}}"></script>
+
+	<!-- JS Block -->
+	{% block js %}{% endblock %}
+
+
+</head>
+<body>
+	<div class="col-xs-8 col-xs-offset-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h1 align="center">pcDuino Module Readings</h1>
+			</div>
+
+			<div class="panel-body" align="center">
+
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<button class="btn btn-default">Current</button>
+						<button class="btn btn-default">Historical</button>
+					</div>
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h2>Current Readings {{term}}</h2>
+					</div>
+
+					<div class="panel-body">
+						<div class="col-xs-3"><h3>mID</h3></div>
+
+						<div class="col-xs-4">
+							<h3>Temperature</h3>
+						</div>
+						<div class="col-xs-4">
+							<h3>Light Intensity</h3>
+						</div>
+
+						<!-- Loop Over All Modules' Most Recent Readings -->
+						{% for r in s_readings %}
+
+							<div class="col-xs-3"><p>{{r.m_id}}</p></div>
+
+							<div class="col-xs-4">
+								<p>{{r.temp}}</p>
+							</div>
+							<div class="col-xs-4">
+								<p>{{r.light}}</p>
+							</div>
+						{% endfor %}
+					</div>
+
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="col-xs-12" id="test-chart" style="height:500px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

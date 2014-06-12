@@ -1,6 +1,11 @@
-from flask import Flask, render_template, request
+## @package server
+# The main server program. Acts as an interaction point for posting and getting
+# and displaying data from the database.
+
+from flask import Flask, render_template, request, url_for
 from bin.db.db_schema import *
 from bin.db.db_actions import *
+from bin.data.graphs import *
 import json
 
 from pprint import pprint
@@ -11,8 +16,7 @@ db = SQLAlchemy(app)
 
 @app.route('/')
 def home():
-  r = GetReadings()
-  return render_template('base.html', temp = ModuleReading.query.count())
+  return render_template('html/base.html')
 
 @app.route('/post_reading', methods=['POST'])
 def post_reading():
@@ -32,5 +36,18 @@ def post_reading():
 
   return ''
 
+@app.route('/get_data', methods=['GET'])
+def get_data():
+  data = DictionaryForModules()
+  return json.dumps(data)
+
+@app.route('/scripts/plot_dict')
+def get_plotDict_script():
+  v = url_for('static', filename='js/plotDict.js')
+  print('file: ' + str(v))
+  return v
+
 if __name__ == '__main__':
+  AddDummyPopulation(2)
+  print('Initialized: Waiting for Connections!')
   app.run(debug=True)
