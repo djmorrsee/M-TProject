@@ -48,6 +48,5 @@ def get_plotDict_script():
   return v
 
 if __name__ == '__main__':
-  
   print('Initialized: Waiting for Connections!')
   app.run(debug=True)
