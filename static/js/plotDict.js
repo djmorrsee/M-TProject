@@ -3,14 +3,14 @@ function GetPlotDict () {
   return {
     title:'Temp/Light Readings',
     titleOptions:{
-      fontSize:'32pt'
+      fontSize:'32pt',
     },
 
     seriesColors:['#F00', '#00F'],
 
     axesDefaults : FormatAxesDefaults(),
     axes:FormatAxes(),
-
+    grid:FormatGrid(),
 
 
     seriesDefaults:FormatSeriesDefaults(),
@@ -20,25 +20,27 @@ function GetPlotDict () {
   }
 }
 
-function AlternatingYAxisArray () {
-  var ar = []
-  for (i = 0; i < 20; ++i) {
-    if (i % 2 == 1) {
-      ar.push({yaxis:'yaxis'})
-    } else {
-      ar.push({yaxis:'y2axis'})
-    }
+function FormatGrid () {
+  return {
+    background:"#FFF",
+    shadowAlpha:0,
+    borderWidth:1,
+    borderColor:"#000",
+    gridLineColor:"#000"
   }
-
-  return ar
 }
 
 function FormatAxesDefaults () {
   return {
+    syncTicks:true,
+    useSeriesColor:true,
+
     pad:1.1,
+
     tickRenderer : $.jqplot.CanvasAxisTickRenderer,
     tickOptions : {
       fontSize:'10pt',
+      markSize:10
     },
 
     labelOptions : {
@@ -57,20 +59,30 @@ function FormatAxes () {
         formatString:'%#I:%M:%S'
       },
       show:true,
-      label:'Date',
+      label:'Time',
     },
     yaxis:
     {
       show:true,
-      label:'Temp',
-      labelRenderer:$.jqplot.CanvasAxisLabelRenderer
+      syncTicks:true,
+
+      label:'Temperature',
+      labelRenderer:$.jqplot.CanvasAxisLabelRenderer,
+      tickOptions: {
+        formatString:'%.0f',
+      },
     },
 
     y2axis:
     {
       show:true,
-      label:'Light',
+      syncTicks:true,
+
+      label:'Light Intensity',
       labelRenderer:$.jqplot.CanvasAxisLabelRenderer,
+      tickOptions: {
+        formatString:'%.0f'
+      },
       labelOptions:{
         angle:90
       }
@@ -80,14 +92,13 @@ function FormatAxes () {
 
 function FormatSeriesDefaults () {
   return {
-    trendline: {
-      show:false
-    },
 
-    lineWidth:1.5,
+    lineWidth:2,
     markerOptions:
     {
-      show:false
+      show:true,
+      size:4,
+      lineWidth:2
     },
     shadow:true,
     shadowAngle: 45,
@@ -125,7 +136,8 @@ function FormatCursor () {
     showVerticalLine:true,
     showHorizontalLine:true,
     intersectionThreshold:10,
-    zoom:true
+    zoom:true,
+    constrainZoomTo:'x'
   }
 }
 
