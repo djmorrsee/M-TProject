@@ -21,9 +21,7 @@ def home():
 @app.route('/post_reading', methods=['POST'])
 def post_reading():
   if request.method == 'POST':
-    if 
-    
-	  data = json.loads(request.data)
+    data = json.loads(request.data)
 
     if 'light' in data and 'temp' in data and 'm_id' in data:
       light = data['light']
