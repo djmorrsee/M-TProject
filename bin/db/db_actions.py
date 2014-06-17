@@ -3,6 +3,11 @@
 import random, time
 from db_schema import *
 
+## Deletes the first row. This is for database maintenance
+def DeleteFirstRow():
+  first_row =ModuleReading.query.order_by(ModuleReading.time_stamp.desc()).first()
+  db.session.delete(first_row)
+  db.session.commit()
 ## Resets the reinitializes the db
 def ResetTable():
   db.drop_all()

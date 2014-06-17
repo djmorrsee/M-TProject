@@ -21,7 +21,9 @@ def home():
 @app.route('/post_reading', methods=['POST'])
 def post_reading():
   if request.method == 'POST':
-    data = json.loads(request.data)
+    if 
+    
+	  data = json.loads(request.data)
 
     if 'light' in data and 'temp' in data and 'm_id' in data:
       light = data['light']
@@ -34,7 +36,7 @@ def post_reading():
     new_reading = ModuleReading(light, temp, m_id)
     AddReading(new_reading)
 
-  return ''
+  return 'Success'
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
