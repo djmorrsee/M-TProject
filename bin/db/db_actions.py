@@ -1,51 +1,99 @@
 ## @package db_actions
 # This file contains a series of database wrapper functions
-import random, time
-from db_schema import *
+import time, calendar
+from bin.db.db_schema import ModuleReading
 
-## Resets the reinitializes the db
-def ResetTable():
-  db.drop_all()
-  db.create_all()
-
-## Adds a ModuleReading to the database and commits
-def AddReading(reading):
-  db.session.add(reading)
-  db.session.commit()
-
-## Adds an array of ModuleReadings to the db and commits it
-def AddManyReadings(readings):
+def ReadingsToHistoryJSON(m_id, readings):
+  m_data = {} # Should Match Module_History_Reading.JSON
+  m_data.update({'module_id':m_id})
+  m_data.update({'reading_count':len(readings)})
+  light = []
+  temp = []
   for r in readings:
-    db.session.add(r)
-  db.session.commit()
+    light.append(r.light)
+    temp.append(r.temp)
+  m_data.update({'temperature':temp})
+  m_data.update({'light':light})
+  return m_data
 
-## Creates a dummy ModuleReading and calls AddReading
-def AddDummyReading():
-  r = ModuleReading(random.randint(0, 4096), random.randint(0,4096), random.randint(0,5))
-  AddReading(r)
+class DBActor:
+  def __init__(self, database):
+    self.db = database
+    self.module_ids = self.GetModuleIDs()
 
-## Populates the database with module readings
-def AddDummyPopulation(mnum=1, rnum=5):
-  ResetTable()
-  readings = []
-  for i in range(0, mnum):
-    for j in range(0, rnum):
-      readings.append(ModuleReading((j + 1) ** (i + 1), i + j, i))
-      time.sleep(1)
-    time.sleep(5)
-  AddManyReadings(readings)
+  def ResetTable(self):
+    self.db.drop_all()
+    self.db.create_all()
+    return 701
 
+  def RegisterID(self, m_id, data):
+    if m_id in self.module_ids:
+      return 705
+    self.module_ids.append(m_id)
 
-## Returns a list of unique module ids in the db
-def GetModuleIDs ():
-  rs = db.session.query(ModuleReading.m_id.distinct()).all()
-  return sorted(r[0] for r in rs)
+    return 701
 
-## Returns a number of readings equal to count with Module ID:m_id
-def GetReadings(m_id, count = 0):
-  rs = ModuleReading.query.filter(ModuleReading.m_id==m_id).order_by(ModuleReading.time_stamp.desc()).all()
+  def RemoveID(self, m_id, data):
+    print(self.module_ids)
 
-  if count > 0:
-    return rs[:count]
-  else:
-    return rs
+    if not m_id in self.module_ids:
+      return 705
+
+    for r in self.GetReadingsForModule(m_id):
+      self.db.session.delete(r)
+
+    self.db.session.commit()
+    self.module_ids.remove(m_id)
+    return 701
+
+  def AddReading(self, data):
+    m_id = data["module_id"]
+    if not m_id in self.module_ids:
+      return 705
+
+    module_auth_id = data["module_auth_id"]
+    ## Check The Authorization ##
+
+    temp = data["temperature"]
+    light = data["light"]
+
+    reading = ModuleReading(light, temp, m_id)
+
+    self.db.session.add(reading)
+    self.db.session.commit()
+    return 701
+
+  def DropOldData(self, hours):
+    time_stamp = calendar.timegm(time.gmtime())
+    age = (60 * 60 * hours)
+
+    old_time_stamp = time_stamp - age
+    old_readings = ModuleReading.query.filter(ModuleReading.time_stamp < old_time_stamp).all()
+
+    for r in old_readings:
+      self.db.session.delete(r)
+
+    self.db.session.commit()
+    return 702
+
+  def GetModuleIDs(self):
+    rs = self.db.session.query(ModuleReading.m_id.distinct()).all()
+    return sorted(r[0] for r in rs)
+
+  def GetReadingsForModule(self, m_id, count = 0):
+    if not m_id in self.module_ids:
+      return []
+
+    rs = ModuleReading.query.filter(ModuleReading.m_id==m_id).order_by(ModuleReading.time_stamp.desc()).all()
+
+    if count > 0:
+      return rs[:count]
+    else:
+      return rs
+
+  def GetAllData(self):
+    modules = []
+    for i in self.GetModuleIDs():
+      readings = GetReadingsForModule(i)
+      modules.append(ReadingsToHistoryJSON(readings))
+    return modules
