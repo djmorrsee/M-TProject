@@ -19,8 +19,6 @@ Will return a dictionary of all module data.
 ##/module/ - GET
 Returns a list of available module ids
 
-
-
 ##/module/&lt;id>/ - GET, POST, DELETE
 
 ####GET
