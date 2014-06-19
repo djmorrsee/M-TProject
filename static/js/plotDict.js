@@ -1,10 +1,11 @@
+var FONT_CONST = 'Arial, Sans-Serif'
+var FONT_COLOR_01 = '#000'
+
 function GetPlotDict () {
   console.log('Building Graph Dictionary')
   return {
-    title:'Temp/Light Readings',
-    titleOptions:{
-      fontSize:'32pt',
-    },
+    title:FormatTitle(),
+
 
     seriesColors:['#F00', '#00F'],
 
@@ -17,16 +18,24 @@ function GetPlotDict () {
     series:FormatSeries(),
 
     cursor:FormatCursor(),
+    legend:FormatLegend(),
+  }
+}
+
+function FormatTitle () {
+  return {
+    text:'24 Hour Temperature/Light Readings',
+    fontSize:'24pt',
+    fontFamily:FONT_CONST,
+    textColor:FONT_COLOR_01,
   }
 }
 
 function FormatGrid () {
   return {
     background:"#FFF",
-    shadowAlpha:0,
-    borderWidth:1,
     borderColor:"#000",
-    gridLineColor:"#000"
+    gridLineColor:"#000",
   }
 }
 
@@ -39,13 +48,16 @@ function FormatAxesDefaults () {
 
     tickRenderer : $.jqplot.CanvasAxisTickRenderer,
     tickOptions : {
-      fontSize:'10pt',
-      markSize:10
+      fontSize:'12pt',
+      textColor:FONT_COLOR_01,
+      formatString:'%.0f'
     },
 
     labelOptions : {
-      fontSize:'16pt',
-      fontFamily:'Georgia, Serif'
+      fontSize:'24pt',
+      fontFamily:FONT_CONST,
+      textColor:FONT_COLOR_01,
+
     }
   }
 }
@@ -54,38 +66,39 @@ function FormatAxes () {
   return {
     xaxis:
     {
-      renderer:$.jqplot.DateAxisRenderer,
-      tickOptions: {
-        formatString:'%#I:%M:%S'
-      },
-      show:true,
       label:'Time',
+      renderer:$.jqplot.DateAxisRenderer,
+
+      show:true,
+      tickOptions: {
+        formatString:'%#I:%M:%S',
+      },
     },
+
     yaxis:
     {
       show:true,
-      syncTicks:true,
-
-      label:'Temperature',
+      label:'Temperature (degrees F)',
       labelRenderer:$.jqplot.CanvasAxisLabelRenderer,
-      tickOptions: {
-        formatString:'%.0f',
-      },
+
     },
 
     y2axis:
     {
+      min:0,
+      max:100,
       show:true,
-      syncTicks:true,
-
-      label:'Light Intensity',
+      label:'Light Intensity (%)',
       labelRenderer:$.jqplot.CanvasAxisLabelRenderer,
-      tickOptions: {
-        formatString:'%.0f'
+
+      tickOptions:{
+        showGridline:false,
       },
       labelOptions:{
-        angle:90
-      }
+        angle:90,
+
+      },
+
     }
   }
 }
@@ -93,18 +106,13 @@ function FormatAxes () {
 function FormatSeriesDefaults () {
   return {
 
-    lineWidth:2,
     markerOptions:
     {
       show:true,
       size:4,
       lineWidth:2
     },
-    shadow:true,
-    shadowAngle: 45,
-    shadowOffset: .25,
-    shadowDepth: 5,
-    shadowAlpha: 1,
+
     rendererOptions: {
       smooth:true
     }
@@ -115,10 +123,13 @@ function FormatSeries () {
   function _FormatSeries(isTempLine) {
     if (isTempLine) {
       return {
+        label:'Temp',
         yaxis:'yaxis',
+
       }
     } else {
       return {
+        label:'Light',
         yaxis:'y2axis',
       }
     }
@@ -144,7 +155,20 @@ function FormatCursor () {
 function FormatHighlighter () {
   return {
     show:true,
-    tooltipFadeSpeed:'def',
-    bringSeriesToFront:true
+    fadeTooltip:false,
+  }
+}
+
+function FormatLegend () {
+  return {
+    show:true,
+    location:'e',
+    placement:'outsideGrid',
+    renderer:$.jqplot.EnhancedLegendRenderer,
+    rowSpacing:'2em',
+    border:'none',
+    marginBottom:'75px',
+    fontSize:'12pt',
+    textColor:FONT_COLOR_01,
   }
 }
