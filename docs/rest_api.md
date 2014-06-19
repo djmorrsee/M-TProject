@@ -19,25 +19,64 @@ Will return a dictionary of all module data.
 ##/module/ - GET
 Returns a list of available module ids
 
-##/module/&lt;id>/ - GET
+
+
+##/module/&lt;id>/ - GET, POST, DELETE
+
+####GET
 Returns a list of historical readings for the given module
 
-##/module/&lt;id>/&lt;auth_id>/ - POST
-Registers a module to the database with the given id.
+####POST
+Registers a module to the database.
 
-Returns an m_auth_id, which is needed for the module to post data.
+Data is expected in the form:
 
-If a module with [id] already exists in the database, the process is aborted.
+	{
+		"module_id":123,
+		"auth_id":a1e3c83997eff1234,
+	}
 
-##/module/&lt;id>/&lt;auth_id>/ - DELETE
-Removes the module with id from the database
+Both 'module_id' and 'm_auth_id' need to be recognized by the system in order
+for data to be successfully posted.
 
-Returns a success message.
+Returns a Response Code
 
-##/module/post_reading/&lt;id>/&lt;m_auth_id>/ - POST
-Node for module to post data. The module must know its id and m_auth_id, which is assigned at registration.
+####DELETE
+Deletes all data and unregisters a module
 
-Returns a success mesage.
+Data is expected to be of the form
 
-##/reset/&lt;auth_id>/ - DELETE
+	{
+		"auth_id":a1e3c83997eff1234,
+	}
+
+"auth_id" must be recognized by the system for the data to be successfully deleted.
+
+Returns a Response Code
+
+##/module/post_reading/ - POST
+Node for module to post data.
+
+Data is expected to be of the form:
+
+	{
+		"module_id":123,
+		"module_auth_id":a1e3c83997eff1234,
+		"reading": {
+			"temperature":4096,
+			"light":4096
+		}
+	}
+
+Returns a Response Code.
+
+##/reset/ - DELETE
 Clears All Data From The Database
+
+Data is expected to be of the form:
+
+	{
+		"auth_id":a1e3c83997eff1234,
+	}
+
+Returns a Response Code
