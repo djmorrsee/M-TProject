@@ -30,17 +30,11 @@ def get_module_list():
 @app.route('/module/<m_id>/', methods=['GET', 'POST', 'DELETE'])
 def handle_module_request(m_id):
   r_method = request.method
-
-<<<<<<< HEAD
-  return 'Success'
-=======
   if r_method == 'GET':
     return jsonify(db_actor.GetReadingsForModule(m_id))
   elif r_method == 'POST':
     data = request.data
     ## Do Authrorization ##
->>>>>>> master
-
     return str(db_actor.RegisterID(m_id, data))
   elif r_method == 'DELETE':
     data = request.data
