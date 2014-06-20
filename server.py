@@ -21,11 +21,11 @@ def home():
 ## REST Routes
 @app.route('/all/', methods=['GET'])
 def get_all_data():
-  return jsonify(db_actor.GetAllData())
+  return str(db_actor.GetAllData())
 
 @app.route('/module/', methods=['GET'])
 def get_module_list():
-  return jsonify(db_actor.GetModuleIDs())
+  return str(db_actor.GetModuleIDs())
 
 @app.route('/module/<m_id>/', methods=['GET', 'POST', 'DELETE'])
 def handle_module_request(m_id):
@@ -37,16 +37,26 @@ def handle_module_request(m_id):
     ## Do Authrorization ##
     return str(db_actor.RegisterID(m_id, data))
   elif r_method == 'DELETE':
+    readings = db_actor.GetReadingsForModule(m_id)
+    if readings == None:
+      return str(705)
+    j_data = ReadingsToHistoryJSON(m_id, readings)
+    return str(j_data)
+
+  else:
+>>>>>>> master
     data = request.data
     ## Do Authrorization ##
-
-    return str(db_actor.RemoveID(m_id, data))
-  else:
-    return str(702)
+    if r_method == 'POST':
+      return str(db_actor.RegisterID(m_id))
+    elif r_method == 'DELETE':
+      return str(db_actor.RemoveID(m_id))
+    else:
+      return str(702)
 
 @app.route('/module/post_reading/', methods=['POST'])
 def post_data():
-  data = request.data
+  data = request.json
   ## Authorization Done On The Module Level ##
   return str(db_actor.AddReading(data))
 
@@ -63,26 +73,6 @@ def drop_old_data():
   ## Do Authrorization ##
 
   return str(db_actor.DropOldData(1))
-
-
-# ### Old
-# @app.route('/post_reading', methods=['POST'])
-# def post_reading():
-#   if request.method == 'POST':
-#     data = json.loads(request.data)
-#
-#     if 'light' in data and 'temp' in data and 'm_id' in data:
-#       light = data['light']
-#       temp = data['temp']
-#       m_id = data['m_id']
-#     else:
-#       print('INVALID DATA!')
-#       return None
-#
-#     new_reading = ModuleReading(light, temp, m_id)
-#     AddReading(new_reading)
-#
-#   return ''
 
 ## Scripts Routes ##
 # These routes are helper methods for loading static js files on our web page

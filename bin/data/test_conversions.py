@@ -3,7 +3,6 @@ import conversions
 
 class ConversionsTest(unittest.TestCase):
 
-
   def setUp(self):
     pass
   def tearDown(self):
@@ -13,11 +12,12 @@ class ConversionsTest(unittest.TestCase):
   ## IntToTemp
   def test_int_to_temp(self):
     ## Function takes a 12 bit uint (0, 4096)
-    def conv(val) :
-      return 32 + (((val * 3.3) / 4096.0 - 0.5) * 100.0) * 9.0/5.0
+    def close_conv(val) :
+      return 32 + (((val * 3.3) / 4096 - 0.5) * 100) * 9/5
 
-    for i in range(0, 4097) :
-      self.assertEqual(conversions.IntToTemp(i), conv(i), "Temp Conversion Not Correct For " + str(i))
+    val = close_conv(2048)
+    conv_val = conversions.IntToTemp(2048)
+    self.assertEqual(val, conv_val)
 
   def test_negative_int_to_temp(self):
     self.assertRaises(conversions.ConversionError, conversions.IntToTemp, -1)
