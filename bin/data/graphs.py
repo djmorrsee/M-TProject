@@ -6,9 +6,14 @@ from bin.db.db_actions import *
 
 import json
 
-def DictionaryForModules ():
+class GraphError(Exception):
+  def __init__(self, msg):
+    super(GraphError, self).__init__(msg)
+
+
+def DictionaryForModules (db_actor):
   ms_dict = {}
-  for _id in GetModuleIDs():
+  for _id in db_actor.GetModuleIDs():
     label = str(_id)
     module_dict = DictionaryFromReadings(GetReadings(_id))
     ms_dict.update({label:module_dict})
@@ -23,7 +28,7 @@ def DictionaryFromReadings (readings):
   for r in readings:
     time.append(r.time_stamp)
     temp.append(IntToTemp(r.temp))
-    light.append(r.light)
+    light.append(IntToLight(r.light))
 
   m_dict.update({'light':LineDictFromArrays(time, light)})
   m_dict.update({'temp':LineDictFromArrays(time, temp)})

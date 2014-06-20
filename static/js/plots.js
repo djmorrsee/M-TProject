@@ -6,9 +6,12 @@ $(document).ready(function () {
 
   $.get(URL, function (d) {
 
-    FillTable(d);
-    BuildPlot(d);
-
+    if (!$.isEmptyObject(d)) {
+      FillTable(d);
+      BuildPlot(d);
+    } else {
+      console.log('No Data Received')
+    }
   }, "json");
 
 });
@@ -59,8 +62,9 @@ function BuildPlot (d) {
 }
 
 function GenerateReadingHTML (m_key, temp, light) {
+
   var keyString = "<div class='col-xs-3'><p>" + m_key.toString() + "</p></div>"
-  var tempString = "<div class='col-xs-4'><p>" + temp.toString() + "</p></div>"
-  var lightString = "<div class='col-xs-4'><p>" + light.toString() + "</p></div>"
+  var tempString = "<div class='col-xs-4'><p>" + temp.toFixed(1) + " degrees F</p></div>"
+  var lightString = "<div class='col-xs-4'><p>" + light.toFixed(1) + "% </p></div>"
   return keyString + tempString + lightString
 }

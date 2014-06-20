@@ -1,0 +1,8 @@
+{
+	"module_id":123,
+	"module_auth_id":a1e3c83997eff1234,
+	"reading": {
+		"temperature":4096,
+		"light":4096
+	}
+}
