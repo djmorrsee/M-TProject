@@ -6,6 +6,8 @@ from bin.db.db_actions import *
 
 import json
 
+## Subject to rewrite to conform to specified JSON formats
+
 class GraphError(Exception):
   def __init__(self, msg):
     super(GraphError, self).__init__(msg)

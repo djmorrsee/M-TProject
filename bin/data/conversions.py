@@ -31,7 +31,7 @@ def CheckReadingType(reading):
   if(type(reading) is not int):
     raise ConversionError("Conversion Must Be On Integers!")
 
-
+## Asserts That the reading is 12 bits
 def CheckReadingBounds(reading):
   if(reading < 0 or reading > 4096):
     raise ConversionError("Conversion Works Only On 12 Bit Integers!")

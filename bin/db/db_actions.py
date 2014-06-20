@@ -26,16 +26,14 @@ class DBActor:
     self.db.create_all()
     return 701
 
-  def RegisterID(self, m_id, data):
+  def RegisterID(self, m_id):
     if m_id in self.module_ids:
       return 705
-    self.module_ids.append(m_id)
-
+    self.module_ids.append(str(m_id))
     return 701
 
-  def RemoveID(self, m_id, data):
-    print(self.module_ids)
-
+  def RemoveID(self, m_id):
+    m_id in self.module_ids
     if not m_id in self.module_ids:
       return 705
 
@@ -52,10 +50,10 @@ class DBActor:
       return 705
 
     module_auth_id = data["module_auth_id"]
-    ## Check The Authorization ##
+    ## Check The Authorization ID ##
 
-    temp = data["temperature"]
-    light = data["light"]
+    temp = data["reading"]["temperature"]
+    light = data["reading"]["light"]
 
     reading = ModuleReading(light, temp, m_id)
 
@@ -78,11 +76,12 @@ class DBActor:
 
   def GetModuleIDs(self):
     rs = self.db.session.query(ModuleReading.m_id.distinct()).all()
-    return sorted(r[0] for r in rs)
+    ids = sorted(r[0] for r in rs)
+    return ids
 
   def GetReadingsForModule(self, m_id, count = 0):
     if not m_id in self.module_ids:
-      return []
+      return None
 
     rs = ModuleReading.query.filter(ModuleReading.m_id==m_id).order_by(ModuleReading.time_stamp.desc()).all()
 
@@ -94,6 +93,6 @@ class DBActor:
   def GetAllData(self):
     modules = []
     for i in self.GetModuleIDs():
-      readings = GetReadingsForModule(i)
-      modules.append(ReadingsToHistoryJSON(readings))
+      readings = self.GetReadingsForModule(i)
+      modules.append(ReadingsToHistoryJSON(i, readings))
     return modules
