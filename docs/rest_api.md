@@ -30,7 +30,6 @@ Registers a module to the database.
 Data is expected in the form:
 
 	{
-		"module_id":123,
 		"auth_id":a1e3c83997eff1234,
 	}
 
