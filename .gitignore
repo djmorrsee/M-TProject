@@ -3,3 +3,5 @@ db/
 *.pyc
 *.db
 .DS_Store
+
+auth_file.txt

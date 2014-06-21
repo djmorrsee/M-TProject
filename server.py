@@ -57,7 +57,10 @@ def post_data():
 def reset_data():
   data = reqeust.data
   ## Do Authrorization ##
-
+  if not VerifyAuthData(data):
+    return str(703)
+  if not AuthorizeAuthData(data):
+    return str(704)
   return str(db_actor.ResetTable())
 
 @app.route('/drop/', methods=['DELETE'])

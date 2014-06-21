@@ -1,8 +1,14 @@
 
-auth_ids = [123, 321]
+auth_ids = []
 
 def BuildAuthIDs():
-	auth_file = open('auth_file.txt')
+	auth_file = open('auth_file.txt', 'r')
+
+	auth_ids = []
+	for _id in auth_file.readlines():
+		auth_ids.append()
+
+	auth_file.close()
 
 def VerifyAuthData(data):
 	return data.keys() == ["auth_id"]
