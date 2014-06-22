@@ -2,11 +2,13 @@
 # This file contains a series of database wrapper functions
 import time, calendar
 from bin.db.db_schema import ModuleReading
+from bin.util.authorization import HashModuleID
+from bin.util.status_codes import GetCode
 
 def ReadingsToHistoryJSON(m_id, readings):
   m_data = {} # Should Match Module_History_Reading.JSON
   m_data.update({'module_id':m_id})
-  m_data.update({'reading_count':len(readings)})
+  m_data.update({'reading_count':len(readings) or None})
   light = []
   temp = []
   for r in readings:
@@ -24,33 +26,39 @@ class DBActor:
   def ResetTable(self):
     self.db.drop_all()
     self.db.create_all()
-    return 701
+    return GetCode(701)
 
   def RegisterID(self, m_id):
     if m_id in self.module_ids:
-      return 705
+      return GetCode(705)
+
     self.module_ids.append(str(m_id))
-    return 701
+
+    # Return a Unique m_auth_id that the module will need
+    return HashModuleID(m_id)
 
   def RemoveID(self, m_id):
     m_id in self.module_ids
     if not m_id in self.module_ids:
-      return 705
+      return GetCode(705)
 
     for r in self.GetReadingsForModule(m_id):
       self.db.session.delete(r)
 
     self.db.session.commit()
     self.module_ids.remove(m_id)
-    return 701
+    return GetCode(701)
 
   def AddReading(self, data):
     m_id = data["module_id"]
-    if not m_id in self.module_ids:
-      return 705
+    if not str(m_id) in self.module_ids:
+      return GetCode(705)
 
     module_auth_id = data["module_auth_id"]
     ## Check The Authorization ID ##
+
+    if str(module_auth_id) != str(HashModuleID(m_id)):
+      return GetCode(706)
 
     temp = data["reading"]["temperature"]
     light = data["reading"]["light"]
@@ -59,7 +67,7 @@ class DBActor:
 
     self.db.session.add(reading)
     self.db.session.commit()
-    return 701
+    return GetCode(701)
 
   def DropOldData(self, hours):
     time_stamp = calendar.timegm(time.gmtime())
@@ -72,7 +80,7 @@ class DBActor:
       self.db.session.delete(r)
 
     self.db.session.commit()
-    return 702
+    return GetCode(702)
 
   def GetModuleIDs(self):
     rs = self.db.session.query(ModuleReading.m_id.distinct()).all()

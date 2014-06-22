@@ -1,19 +1,21 @@
+// The front end is subject to a rework                      //
+// Data formats have changed, breaking all these functions   //
+// Shoul take full advantage of the new REST API             //
+
 $.jqplot.config.enablePlugins = true;
 
 $(document).ready(function () {
 
-  URL = '/get_data'
-
-  $.get(URL, function (d) {
-
-    if (!$.isEmptyObject(d)) {
-      FillTable(d);
-      BuildPlot(d);
-    } else {
-      console.log('No Data Received')
-    }
-  }, "json");
-
+  URL = '/all/'
+  $.ajax({url:URL})
+    .done(function (data) {
+      parsed_data = JSON.parse(data)
+      var c = parsed_data.length
+      for (var i = 0; i < c; ++i) {
+        dataset = parsed_data[i]
+        console.log(dataset['module_id'])
+      }
+    })
 });
 
 function FillTable (d) {

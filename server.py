@@ -10,9 +10,7 @@ from bin.data.graphs import *
 import json
 
 db_actor = DBActor(db)
-
-
-app.jinja_loader = FileSystemLoader('templates')
+app = Flask(__name__)
 
 @app.route('/')
 def home():
@@ -21,7 +19,7 @@ def home():
 ## REST Routes
 @app.route('/all/', methods=['GET'])
 def get_all_data():
-  return str(db_actor.GetAllData())
+  return json.dumps(db_actor.GetAllData())
 
 @app.route('/module/', methods=['GET'])
 def get_module_list():
@@ -39,12 +37,11 @@ def handle_module_request(m_id):
   elif r_method == 'DELETE':
     readings = db_actor.GetReadingsForModule(m_id)
     if readings == None:
-      return str(705)
+      return GetCode(705)
     j_data = ReadingsToHistoryJSON(m_id, readings)
     return str(j_data)
 
   else:
->>>>>>> master
     data = request.data
     ## Do Authrorization ##
     if r_method == 'POST':
@@ -52,7 +49,7 @@ def handle_module_request(m_id):
     elif r_method == 'DELETE':
       return str(db_actor.RemoveID(m_id))
     else:
-      return str(702)
+      return GetCode(702)
 
 @app.route('/module/post_reading/', methods=['POST'])
 def post_data():
@@ -64,7 +61,10 @@ def post_data():
 def reset_data():
   data = reqeust.data
   ## Do Authrorization ##
-
+  if not VerifyAuthData(data):
+    return str(703)
+  if not AuthorizeAuthData(data):
+    return str(704)
   return str(db_actor.ResetTable())
 
 @app.route('/drop/', methods=['DELETE'])
@@ -80,6 +80,7 @@ def drop_old_data():
 def get_plotDict_script():
   v = url_for('static', filename='js/plotDict.js')
   return v
+
 
 ## Start The Server
 if __name__ == '__main__':
