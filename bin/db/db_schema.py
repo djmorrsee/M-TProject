@@ -1,9 +1,8 @@
-## @package db_schema
-# This file contains the schema for the database
-#
-# Using the flask-sqlalchemy tools, the ModuleReading class is created as a
-# mapping between our python interface and the underlying sqlite database
+""" This file contains the schema for the database
 
+Using the flask-sqlalchemy tools, the ModuleReading class is created as a
+mapping between our python interface and the underlying sqlite database.
+"""
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.declarative import declarative_base
@@ -21,6 +20,7 @@ db = SQLAlchemy(app)
 ## ModuleReading
 # The database model class.
 class ModuleReading(db.Model):
+  """ The Database Model Class """
   ## Autoincrementing table id
   _id = Column(Integer, primary_key = True, unique = True)
 
@@ -41,6 +41,13 @@ class ModuleReading(db.Model):
   # @param _temp Integer Temperature Reading
   # @param _m_id Module ID
   def __init__(self, _light, _temp, _m_id):
+    """ Initialize the Database Reading
+    Args:
+      _light (int): 12 bit light reading
+      _temp (int): 12 bit temp reading
+      _m_id (int): Module ID
+      
+    """
     self.light = _light
     self.temp = _temp
     self.m_id = _m_id
