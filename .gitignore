@@ -3,4 +3,5 @@ db/
 *.pyc
 *.db
 .DS_Store
-
+docs/sphinx/
+auth_file.txt

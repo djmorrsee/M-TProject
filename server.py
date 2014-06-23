@@ -33,7 +33,7 @@ def handle_module_request(m_id):
   elif r_method == 'POST':
     data = request.data
     ## Do Authrorization ##
-    return str(db_actor.RegisterID(m_id, data))
+    return str(db_actor.RegisterID(m_id))
   elif r_method == 'DELETE':
     readings = db_actor.GetReadingsForModule(m_id)
     if readings == None:
