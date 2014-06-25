@@ -82,7 +82,7 @@ class DBActor:
     """
 
     m_id = data["module_id"]
-    if not str(m_id) in self.module_ids:
+    if not m_id in self.module_ids:
       return 705
 
     module_auth_id = data["module_auth_id"]
