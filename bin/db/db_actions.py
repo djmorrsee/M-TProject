@@ -1,4 +1,4 @@
-""" Database Actor
+"""
 
 This file contains code for interacting with our database. The actions are
 abstracted into a DBActor class. The DBActor should be the only way the db
@@ -16,7 +16,8 @@ from bin.util.authorization import HashModuleID
 from bin.data.data import ReadingsToHistoryJSON
 
 class DBActor:
-  """ Database Actor Class
+  """
+
   An instance of this class should be used for all database interactions
   """
   def __init__(self, database):
@@ -25,9 +26,8 @@ class DBActor:
 
   def ResetTable(self):
     """ Resets the datbase
-    Returns:
-      int. Status Code::
-        701 -- Success
+
+    :returns: int -- Status Code 701 SUCCESS
     """
     self.db.drop_all()
     self.db.create_all()
@@ -35,13 +35,14 @@ class DBActor:
 
   def RegisterID(self, m_id):
     """ Registers a module with the database
-    Args:
-      m_id (int): The ID To Register with the system
-    Returns:
-      int. Option::
-        705 -- Failure Code, Module ID already registered. Should be exception (?)
-        hashed_id -- A Unique (to m_id) hash id meant for pcDuino consumption
-          This ID is required for module with m_id to add readings
+
+    :param m_id: The ID of the module to query
+    :type m_id: int
+
+    :returns: int -- A Unique (to m_id) hash id meant for pcDuino consumption
+    :returns: int -- Status Code 705 FAILURE BAD M_ID
+
+    The Unique ID is required for module with m_id to add readings after registration.
     """
     if m_id in self.module_ids:
       return 705
@@ -51,12 +52,12 @@ class DBActor:
 
   def RemoveID(self, m_id):
     """ Removes a Module and all its data from the database
-    Args:
-      m_id (int): The ID To Unregister with the system
-    Returns:
-      int. Status Code::
-        701 -- Success
-        705 -- Failure Code, No module by ID in system. Should be exception (?)
+
+    :param m_id: The ID of the module to query
+    :type m_id: int
+
+    :returns: int -- Status Code 701 SUCCESS
+    :returns: int -- Status Code 705 FAILURE BAD M_ID
     """
     m_id in self.module_ids
     if not m_id in self.module_ids:
@@ -71,13 +72,13 @@ class DBActor:
 
   def AddReading(self, data):
     """ Adds a module reading to the database
-    Args:
-      data (dict): Properly formatted (see the JSON data formats) reading dictionary
-    Returns:
-      int. Status Code::
-        701 -- Success
-        705 -- Failure Code, No module by ID in system. Should be exception (?)
-        706 -- Failur Code, Bad authorization ID for module
+
+    :param data: Properly formatted (see the JSON data formats) reading dictionary
+    :type data: JSON Formatted Dictionary
+
+    :returns: int -- Status Code 701 SUCCESS
+    :returns: int -- Status Code 705 FAILURE BAD M_ID
+    :returns: int -- Status Code 706 FAIURE BAD M_AUTH_ID
     """
 
     m_id = data["module_id"]
@@ -102,14 +103,11 @@ class DBActor:
   def DropOldData(self, hours):
     """ Drops data older than hours from the database
 
-    Used as a trimming device for space saving.
+    :param hours: The age in hours for which data should be dumped
+    :type hours: float
 
-    Args:
-      hours (float): The age in hours for which data should be dumped
+    :returns: int -- Status Code 702 SUCCESS
 
-    Returns:
-      int. Status Code::
-        702 -- Success
     """
     time_stamp = calendar.timegm(time.gmtime())
     age = (60 * 60 * hours)
@@ -126,23 +124,23 @@ class DBActor:
   def GetModuleIDs(self):
     """ Get a list of registered modules
 
-    Returns:
-      list. An array of all registered modules (an empty array if thats the case)
+    :returns: list -- An array of all registered module ids
     """
     rs = self.db.session.query(ModuleReading.m_id.distinct()).all()
     ids = sorted(r[0] for r in rs)
     return ids
 
   def GetReadingsForModule(self, m_id, count = 0):
-    """ Get a list of all (or count) readings for module m_id
+    """ Get a list of all (or count number of) readings for module m_id
 
-    Args:
-      m_id (int): The ID of the module to query
-    Kwargs:
-      count (int): The number of results to return. Default of 0 means all
-    Returns:
-      list. A list of readings for module m_id
-      int. Error Code 705 - No Module By ID
+    :param m_id: The ID of the module to query
+    :type m_id: int
+
+    :param count: The Number of readings to find. Default of 0 means all
+    :type count: int
+
+    :returns: list -- A list of readings
+    :returns: int -- Error Code 705
 
     """
     if not m_id in self.module_ids:
@@ -158,8 +156,7 @@ class DBActor:
   def GetAllData(self):
     """ Get a list of all module data
 
-    Returns:
-      list. A list of readings for each module in the database
+    :returns: list -- A list of readings for each module in the database
     """
     modules = []
     for i in self.GetModuleIDs():
