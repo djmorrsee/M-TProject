@@ -7,6 +7,7 @@ from jinja2 import FileSystemLoader
 from bin.db.db_schema import *
 from bin.db.db_actions import *
 from bin.data.graphs import *
+from bin.util.status_codes import *
 import json
 
 db_actor = DBActor(db)
@@ -23,7 +24,7 @@ def get_all_data():
 
 @app.route('/module/', methods=['GET'])
 def get_module_list():
-  return str(db_actor.GetModuleIDs())
+  return str(db_actor.module_ids)
 
 @app.route('/module/<m_id>/', methods=['GET', 'POST', 'DELETE'])
 def handle_module_request(m_id):
