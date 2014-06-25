@@ -1,9 +1,9 @@
 """ Graph Data Builder
 This file contains functions for grouping data for display in the JQPlot library
-"""
 
-from bin.data.conversions import *
-from bin.db.db_actions import *
+
+DEPRECATED: This file is no longer needed with a common json format!
+"""
 
 import json
 

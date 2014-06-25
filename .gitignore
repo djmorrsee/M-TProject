@@ -1,7 +1,8 @@
 .venv/
-db/
 *.pyc
 *.db
+*.conf
 .DS_Store
 docs/sphinx/
+docs/lint/
 auth_file.txt

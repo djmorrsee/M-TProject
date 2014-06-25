@@ -13,23 +13,7 @@ Status Codes will eventually be abstracted into a SC class for better readabilit
 import time, calendar
 from bin.db.db_schema import ModuleReading
 from bin.util.authorization import HashModuleID
-
-def ReadingsToHistoryJSON(m_id, readings):
-  """ Helper method to build properly formated (?) JSON
-
-  Should probably be in graphs.py
-  """
-  m_data = {} # Should Match Module_History_Reading.JSON
-  m_data.update({'module_id':m_id})
-  m_data.update({'reading_count':len(readings) or None})
-  light = []
-  temp = []
-  for r in readings:
-    light.append(r.light)
-    temp.append(r.temp)
-  m_data.update({'temperature':temp})
-  m_data.update({'light':light})
-  return m_data
+from bin.data.data import ReadingsToHistoryJSON
 
 class DBActor:
   """ Database Actor Class
@@ -151,6 +135,7 @@ class DBActor:
 
   def GetReadingsForModule(self, m_id, count = 0):
     """ Get a list of all (or count) readings for module m_id
+
     Args:
       m_id (int): The ID of the module to query
     Kwargs:
@@ -172,6 +157,7 @@ class DBActor:
 
   def GetAllData(self):
     """ Get a list of all module data
+
     Returns:
       list. A list of readings for each module in the database
     """
