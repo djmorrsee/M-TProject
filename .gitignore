@@ -4,6 +4,6 @@
 *.conf
 .DS_Store
 
-docs/sphinx/
+docs/sphinx*
 docs/lint/
 auth_file.txt

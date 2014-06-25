@@ -1,7 +1,5 @@
 """ Data Conversions
-
-This file contains functions for converting module data into meaningful information
-
+  This file contains functions for converting module data into meaningful information
 """
 
 VOLTAGE = 3.3
@@ -13,9 +11,9 @@ class ConversionError(Exception):
 
 def IntToTemp(reading):
   """ Converts a pcDuino reading into degrees farenheight
+
   Args:
     reading (int): 12 bit integer value
-
   Returns:
     float. The temperature value
   """
@@ -30,9 +28,9 @@ def IntToTemp(reading):
 
 def IntToLight(reading):
   """ Converts a pcDuino reading into a percentage
+
   Args:
     reading (int): 12 bit integer value
-
   Returns:
     float. The light intensity percentage
   """
@@ -44,9 +42,9 @@ def IntToLight(reading):
 
 def CheckReadingType(reading):
   """ Asserts that the reading is of type int
+
   Args:
     reading (int): 12 bit integer value
-
   Returns:
     bool. Assertion that reading is an int
   """
@@ -61,7 +59,6 @@ def CheckReadingBounds(reading):
 
   Args:
     reading (int): 12 bit integer value
-
   Returns:
     bool. Assertion that reading is 12 bits
   """

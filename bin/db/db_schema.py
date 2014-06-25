@@ -20,35 +20,34 @@ db = SQLAlchemy(app)
 ## ModuleReading
 # The database model class.
 class ModuleReading(db.Model):
-  """ The Database Model Class """
-  ## Autoincrementing table id
-  _id = Column(Integer, primary_key = True, unique = True)
+  """ The Database Model Class
 
-  ## Datetime of object creation
-  time_stamp = Column(Integer)
+  :ivar _id: Autoincrementing Table ID
+  :ivar time_stamp: Time Stamp of Creation
+  :ivar light: 12 bit light reading
+  :ivar temp: 12 bit temp reading
+  :ivar m_id: The ID of the module to query
+  """
 
-  ## 12 bit integer light reading
-  light = Column(Integer)
-
-  ## 12 bit integer temperature reading
-  temp = Column(Integer)
-
-  ## ID of the module from which data was sent
-  m_id = Column(Integer)
-
-  ## ModuleReading Init
-  # @param _light Integer Light Reading
-  # @param _temp Integer Temperature Reading
-  # @param _m_id Module ID
   def __init__(self, _light, _temp, _m_id):
-    """ Initialize the Database Reading
-    Args:
-      _light (int): 12 bit light reading
-      _temp (int): 12 bit temp reading
-      _m_id (int): Module ID
-      
+    """ Initialization
+
+    :param _light: 12 bit light reading
+    :type _light: int
+
+    :param _temp: 12 bit temp reading
+    :type _temp: int
+
+    :param _m_id: The ID of the module to query
+    :type _m_id: int
     """
     self.light = _light
     self.temp = _temp
     self.m_id = _m_id
     self.time_stamp = calendar.timegm(time.gmtime())
+
+  _id = Column(Integer, primary_key = True, unique = True)
+  time_stamp = Column(Integer)
+  light = Column(Integer)
+  temp = Column(Integer)
+  m_id = Column(Integer)
