@@ -146,7 +146,7 @@ class DBActor:
 
     """
     if not m_id in self.module_ids:
-      return 705
+      return None
 
     rs = ModuleReading.query.filter(ModuleReading.m_id==m_id).order_by(ModuleReading.time_stamp.desc()).all()
 
