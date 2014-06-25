@@ -1,6 +1,7 @@
 {
 	"module_id":123,
 	"reading_count":123,
+	"times":[123,123,...],
 	"temperature":[4096, 4096, ...],
 	"light":[4096, 4096, ...]
 }

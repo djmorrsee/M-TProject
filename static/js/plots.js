@@ -11,12 +11,48 @@ $(document).ready(function () {
     .done(function (data) {
       parsed_data = JSON.parse(data)
       var c = parsed_data.length
+
+      lines = []
+
       for (var i = 0; i < c; ++i) {
         dataset = parsed_data[i]
-        console.log(dataset['module_id'])
+        generated_lines = CreateLinesForModule(dataset)
+
+        lines.push(generated_lines[0])
+        lines.push(generated_lines[1])
       }
+
+      var options = GetPlotDict()
+      $.jqplot('test-chart', lines, options);
     })
 });
+
+function CreateLinesForModule(m_data) {
+  var m_id = m_data['module_id']
+
+  var count = m_data['reading_count']
+
+  var temp_array = m_data['temperature']
+  var light_array = m_data['light']
+  var time_array = m_data['times']
+
+  var light_line = []
+  var temp_line = []
+
+  for (var c = 0; c < count; ++c) {
+    var time_stamp = time_array[c] * 1000
+    var light_point = [time_stamp, light_array[c]]
+    var temp_point = [time_stamp, temp_array[c]]
+
+    light_line.push(light_point)
+    temp_line.push(temp_point)
+
+  }
+  return [light_line, temp_line]
+}
+
+
+
 
 function FillTable (d) {
   readings = []
