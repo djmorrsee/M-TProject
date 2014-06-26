@@ -10,9 +10,13 @@ def ReadingsToHistoryJSON(m_id, readings):
 
 	Conforms to module_history_reading.json
 
-	Args:
-		m_id (int) : The module ID for these readings
-		readings (list) : A list of ModuleReading's
+	:param m_id: The module ID for these readings
+	:type m_id: int
+
+	:param readings:A list of ModuleReadings
+	:type readings: list [ ]
+
+	:returns: JSON Dictionary -- Formatted for browser consumption
 
 	"""
 	m_data = {}
@@ -31,5 +35,5 @@ def ReadingsToHistoryJSON(m_id, readings):
 	m_data.update({'temperature':temp})
 	m_data.update({'light':light})
 	m_data.update({'times':times})
-	
+
 	return m_data

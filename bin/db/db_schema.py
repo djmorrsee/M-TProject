@@ -5,11 +5,12 @@ mapping between our python interface and the underlying sqlite database.
 """
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer, Column
 
-import os, sys, time, calendar
-import __main__ as main
+import os, sys, time
+
+from datetime import datetime
+from bin.data.conversions import MakeTimeStamp
 
 app = Flask(__name__)
 db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../db/db01.db')
@@ -17,8 +18,6 @@ db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../db/db0
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.path.abspath(db_path)
 db = SQLAlchemy(app)
 
-## ModuleReading
-# The database model class.
 class ModuleReading(db.Model):
   """ The Database Model Class
 
@@ -44,7 +43,8 @@ class ModuleReading(db.Model):
     self.light = _light
     self.temp = _temp
     self.m_id = _m_id
-    self.time_stamp = calendar.timegm(time.gmtime())
+
+    self.time_stamp = MakeTimeStamp()
 
   _id = Column(Integer, primary_key = True, unique = True)
   time_stamp = Column(Integer)
