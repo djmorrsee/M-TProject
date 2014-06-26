@@ -68,8 +68,11 @@ def reset_data():
 def drop_old_data():
   data = request.data
   ## Do Authrorization ##
-
-  return str(db_actor.DropOldData(1))
+  if not VerifyAuthData(data):
+    return str(703)
+  if not AuthorizeAuthData(data):
+    return str(704)
+  return str(db_actor.DropOldData(24))
 
 ## Scripts Routes ##
 # These routes are helper methods for loading static js files on our web page

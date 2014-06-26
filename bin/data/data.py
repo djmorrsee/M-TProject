@@ -17,7 +17,6 @@ def ReadingsToHistoryJSON(m_id, readings):
 	:type readings: list [ ]
 
 	:returns: JSON Dictionary -- Formatted for browser consumption
-
 	"""
 	m_data = {}
 	m_data.update({'module_id':m_id})

@@ -14,6 +14,7 @@ import time, calendar
 from bin.db.db_schema import ModuleReading
 from bin.util.authorization import HashModuleID
 from bin.data.data import ReadingsToHistoryJSON
+from bin.data.conversions import MakeTimeStamp
 
 class DBActor:
   """
@@ -47,7 +48,7 @@ class DBActor:
     if m_id in self.module_ids:
       return 705
 
-    self.module_ids.append(str(m_id))
+    self.module_ids.append(m_id)
     return HashModuleID(m_id)
 
   def RemoveID(self, m_id):
@@ -59,7 +60,6 @@ class DBActor:
     :returns: int -- Status Code 701 SUCCESS
     :returns: int -- Status Code 705 FAILURE BAD M_ID
     """
-    m_id in self.module_ids
     if not m_id in self.module_ids:
       return 705
 
@@ -86,8 +86,6 @@ class DBActor:
       return 705
 
     module_auth_id = data["module_auth_id"]
-    ## Check The Authorization ID ##
-
     if str(module_auth_id) != str(HashModuleID(m_id)):
       return 706
 
@@ -109,7 +107,7 @@ class DBActor:
     :returns: int -- Status Code 702 SUCCESS
 
     """
-    time_stamp = calendar.timegm(time.gmtime())
+    time_stamp = MakeTimeStamp()
     age = (60 * 60 * hours)
 
     old_time_stamp = time_stamp - age
@@ -139,8 +137,7 @@ class DBActor:
     :param count: The Number of readings to find. Default of 0 means all
     :type count: int
 
-    :returns: list -- A list of readings
-    :returns: int -- Error Code 705
+    :returns: list -- A list of readings or None
 
     """
     if not m_id in self.module_ids:
