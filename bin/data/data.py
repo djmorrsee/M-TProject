@@ -21,7 +21,10 @@ def ReadingsToHistoryJSON(m_id, readings):
 	"""
 	m_data = {}
 	m_data.update({'module_id':m_id})
-	m_data.update({'reading_count':len(readings) or None})
+	if readings == None:
+			m_data.update({'reading_count':0})
+	else:
+			m_data.update({'reading_count':len(readings) or None})
 
 	light = []
 	temp = []
