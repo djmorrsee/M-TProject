@@ -33,6 +33,7 @@ class DBActor:
     self.db.drop_all()
     self.db.create_all()
     return 701
+    
 
   def RegisterID(self, m_id):
     """ Registers a module with the database

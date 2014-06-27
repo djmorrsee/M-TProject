@@ -1,9 +1,8 @@
-// The front end is subject to a rework                      //
-// Data formats have changed, breaking all these functions   //
-// Shoul take full advantage of the new REST API             //
 
 $.jqplot.config.enablePlugins = true;
 
+
+// Document Ready, Perform DOM Actions
 $(document).ready(function () {
 
   URL = '/all/'
@@ -16,6 +15,9 @@ $(document).ready(function () {
 
       for (var i = 0; i < c; ++i) {
         dataset = parsed_data[i]
+
+        CreateTableEntry(dataset)
+
         generated_lines = CreateLinesForModule(dataset)
 
         lines.push(generated_lines[0])
@@ -24,8 +26,51 @@ $(document).ready(function () {
 
       var options = GetPlotDict()
       $.jqplot('test-chart', lines, options);
+      $('#hist-panel').collapse('hide')
+
     })
+
+
+  var hist_showing = false;
+  $("#hist-btn").click(function () {
+    if (hist_showing) {
+      // Do Nothing
+    } else {
+      $('#hist-panel').collapse('toggle')
+      $('#current-panel').collapse('toggle')
+      hist_showing = !hist_showing
+    }
+  });
+
+  $("#current-btn").click(function () {
+    if (hist_showing) {
+      $('#hist-panel').collapse('toggle')
+      $('#current-panel').collapse('toggle')
+      hist_showing = !hist_showing
+    } else {
+      // Do Nothing
+    }
+  });
+
 });
+
+
+
+
+// Defined Functions
+function CreateTableEntry(m_data) {
+  var m_id = m_data['module_id']
+  var count = m_data['reading_count']
+
+  if (count > 0) {
+    var light = m_data['light'][0]
+    var temp = m_data['temperature'][0]
+
+    var r_html = GenerateReadingHTML(m_id, temp, light)
+    // Inject it into our table //
+    $("#reading-table").append(r_html)
+  }
+}
 
 function CreateLinesForModule(m_data) {
   var m_id = m_data['module_id']
@@ -40,6 +85,7 @@ function CreateLinesForModule(m_data) {
   var temp_line = []
 
   for (var c = 0; c < count; ++c) {
+
     var time_stamp = time_array[c] * 1000
     var light_point = [time_stamp, light_array[c]]
     var temp_point = [time_stamp, temp_array[c]]
@@ -49,54 +95,6 @@ function CreateLinesForModule(m_data) {
 
   }
   return [light_line, temp_line]
-}
-
-
-
-
-function FillTable (d) {
-  readings = []
-  for (var m_key in d) {
-    var module = d[m_key]
-    var light = module['light']
-    var temp = module['temp']
-
-    var light_v = light['ys'][0]
-    var temp_v = temp['ys'][0]
-
-    readings.push(GenerateReadingHTML(m_key, temp_v, light_v))
-  }
-  $("#reading-table").append(readings)
-}
-
-function BuildPlot (d) {
-  lines = []
-  for(var m_key in d) {
-
-    var module = d[m_key]
-    var light = module['light']
-    var temp = module['temp']
-
-    var light_line = []
-    var temp_line = []
-
-    for(var i = 0; i < light['ys'].length; ++i) {
-
-      var light_point = [light['xs'][i] * 1000, light['ys'][i]]
-      var temp_point = [temp['xs'][i] * 1000, temp['ys'][i]]
-
-      light_line.push(light_point)
-      temp_line.push(temp_point)
-
-    }
-
-    lines.push(light_line)
-    lines.push(temp_line)
-
-  }
-
-  var options = GetPlotDict()
-  $.jqplot('test-chart', lines, options);
 }
 
 function GenerateReadingHTML (m_key, temp, light) {

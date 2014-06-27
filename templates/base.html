@@ -40,7 +40,6 @@
 
 	<!-- JS Block -->
 	{% block js %}{% endblock %}
-	{% set hr = '<hr style="background:#000; border:0; height:1px" />' %}
 
 </head>
 <body>
@@ -54,13 +53,13 @@
 
 				<div class="panel">
 					<div class="panel-body">
-						<button class="btn btn-default">Current</button>
-						<button class="btn btn-default">Historical</button>
+						<button class="btn btn-default" id="current-btn">Current</button>
+						<button class="btn btn-default" id="hist-btn">Historical</button>
 					</div>
 				</div>
 				<hr style="background:#000; border:0; height:1px" />
 
-				<div class="panel">
+				<div class="panel-collapse collapse in" id="current-panel">
 					<h2>Current Readings</h2>
 					<div class="panel-body">
 						<div class="col-xs-3"><h3>mID</h3></div>
@@ -79,7 +78,7 @@
 				</div>
 				<hr style="background:#000; border:0; height:1px" />
 
-				<div class="panel">
+				<div class="panel-collapse collapse in" id="hist-panel">
 					<div class="panel-body">
 						<div class="col-xs-12" id="test-chart" style="height:500px;"></div>
 					</div>

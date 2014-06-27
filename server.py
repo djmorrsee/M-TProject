@@ -6,7 +6,6 @@ from flask import Flask, render_template, request, url_for, jsonify
 from jinja2 import FileSystemLoader
 from bin.db.db_schema import *
 from bin.db.db_actions import *
-from bin.data.graphs import *
 from bin.util.status_codes import *
 import json
 

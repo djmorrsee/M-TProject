@@ -13,7 +13,6 @@ class ConversionsTest(unittest.TestCase):
   ## Authored Tests
   ## IntToTemp
   def test_int_to_temp(self):
-    ## Function takes a 12 bit uint (0, 4096)
     def close_conv(val) :
       return 32 + (((val * 3.3) / 4096 - 0.5) * 100) * 9/5
 
