@@ -26,7 +26,7 @@ $(document).ready(function () {
       $.jqplot('test-chart', lines, options);
 
       // The plot will not draw correctly if the panel is hidden //
-      // $('#hist-panel').collapse('hide')
+      $('#hist-panel').collapse('hide')
 
     })
 
