@@ -1,6 +1,8 @@
 """ Data Conversions
+
   This file contains functions for converting module data into meaningful information
 """
+import datetime, time
 
 VOLTAGE = 3.3
 
@@ -12,10 +14,12 @@ class ConversionError(Exception):
 def IntToTemp(reading):
   """ Converts a pcDuino reading into degrees farenheight
 
-  Args:
-    reading (int): 12 bit integer value
-  Returns:
-    float. The temperature value
+  :param reading: pcDuino Temperature Sensor Reading
+  :type reading: 12 bit int
+
+  **reading** type and resolution are checked in function
+
+  :returns: float -- The temperature value
   """
   CheckReadingType(reading)
   CheckReadingBounds(reading)
@@ -29,10 +33,12 @@ def IntToTemp(reading):
 def IntToLight(reading):
   """ Converts a pcDuino reading into a percentage
 
-  Args:
-    reading (int): 12 bit integer value
-  Returns:
-    float. The light intensity percentage
+  :param reading: pcDuino Light Sensor Reading
+  :type reading: 12 bit int
+
+  **reading** type and resolution are checked in function
+
+  :returns: float -- The light intensity percentage
   """
   CheckReadingType(reading)
   CheckReadingBounds(reading)
@@ -43,24 +49,38 @@ def IntToLight(reading):
 def CheckReadingType(reading):
   """ Asserts that the reading is of type int
 
-  Args:
-    reading (int): 12 bit integer value
-  Returns:
-    bool. Assertion that reading is an int
+  :param reading: pcDuino Sensor Reading
+  :type reading: 12 bit int
+
+  :returns: bool -- Assertion of int type
   """
   if(type(reading) is not int):
     raise ConversionError("Conversion Must Be On Integers!")
 
-## Asserts That the reading is 12 bits
 def CheckReadingBounds(reading):
   """ Asserts That the reading is 12 bits
 
   Do this after calling CheckReadingType on readings
 
-  Args:
-    reading (int): 12 bit integer value
-  Returns:
-    bool. Assertion that reading is 12 bits
+  :param reading: pcDuino Sensor Reading
+  :type reading: 12 bit int
+
+  :returns: bool -- Assertion of 12 bit resolution
   """
   if(reading < 0 or reading > 4096):
-    raise ConversionError("Conversion Works Only On 12 Bit Integers!")
+    raise ConversionError("Conversion Works Only On 12 Bit Integer Values!")
+
+def MakeTimeStamp():
+  """ Helper Method to Create a UTC Timestamp
+
+  :returns: UTC/POSIX Time Stamp -- Assumes time zones don't change.
+  """
+  return time.mktime(datetime.datetime.now().timetuple())
+
+def GetLocalTimeString(utc_stamp):
+  """ Helper Method To Get a datetime object from utc stamp
+
+  :param utc_stamp: UTC/POSIX Time Stamp
+  :type utc_stamp: float
+  """
+  return datetime.datetime.fromtimestamp(utc_stamp)

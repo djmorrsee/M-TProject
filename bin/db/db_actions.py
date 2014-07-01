@@ -6,17 +6,16 @@ is interacted with after creation.
 
 Database creation may eventually be done inside of the DBActor init method
 in order to fully abstract away user interaction with a database.
-
-Status Codes will eventually be abstracted into a SC class for better readability.
-
 """
 import time, calendar
 from bin.db.db_schema import ModuleReading
 from bin.util.authorization import HashModuleID
+from bin.util.status_codes import SC
 from bin.data.data import ReadingsToHistoryJSON
+from bin.data.conversions import MakeTimeStamp
 
 class DBActor:
-  """
+  """ Wrapper class for interacting with the sqlalchemy db
 
   An instance of this class should be used for all database interactions
   """
@@ -31,7 +30,8 @@ class DBActor:
     """
     self.db.drop_all()
     self.db.create_all()
-    return 701
+    return SC.Success()
+
 
   def RegisterID(self, m_id):
     """ Registers a module with the database
@@ -45,9 +45,9 @@ class DBActor:
     The Unique ID is required for module with m_id to add readings after registration.
     """
     if m_id in self.module_ids:
-      return 705
+      return SC.BadMID()
 
-    self.module_ids.append(str(m_id))
+    self.module_ids.append(m_id)
     return HashModuleID(m_id)
 
   def RemoveID(self, m_id):
@@ -59,16 +59,15 @@ class DBActor:
     :returns: int -- Status Code 701 SUCCESS
     :returns: int -- Status Code 705 FAILURE BAD M_ID
     """
-    m_id in self.module_ids
     if not m_id in self.module_ids:
-      return 705
+      return SC.BadMID()
 
     for r in self.GetReadingsForModule(m_id):
       self.db.session.delete(r)
 
     self.db.session.commit()
     self.module_ids.remove(m_id)
-    return 701
+    return SC.Success()
 
   def AddReading(self, data):
     """ Adds a module reading to the database
@@ -81,15 +80,14 @@ class DBActor:
     :returns: int -- Status Code 706 FAIURE BAD M_AUTH_ID
     """
 
+
     m_id = data["module_id"]
     if not m_id in self.module_ids:
-      return 705
+      return SC.BadMID()
 
     module_auth_id = data["module_auth_id"]
-    ## Check The Authorization ID ##
-
     if str(module_auth_id) != str(HashModuleID(m_id)):
-      return 706
+      return SC.BadMAuth()
 
     temp = data["reading"]["temperature"]
     light = data["reading"]["light"]
@@ -98,7 +96,7 @@ class DBActor:
 
     self.db.session.add(reading)
     self.db.session.commit()
-    return 701
+    return SC.Success()
 
   def DropOldData(self, hours):
     """ Drops data older than hours from the database
@@ -109,7 +107,7 @@ class DBActor:
     :returns: int -- Status Code 702 SUCCESS
 
     """
-    time_stamp = calendar.timegm(time.gmtime())
+    time_stamp = MakeTimeStamp()
     age = (60 * 60 * hours)
 
     old_time_stamp = time_stamp - age
@@ -118,8 +116,10 @@ class DBActor:
     for r in old_readings:
       self.db.session.delete(r)
 
+    print('Deleted %i entries' % len(old_readings))
+
     self.db.session.commit()
-    return 702
+    return SC.Success()
 
   def GetModuleIDs(self):
     """ Get a list of registered modules
@@ -139,8 +139,7 @@ class DBActor:
     :param count: The Number of readings to find. Default of 0 means all
     :type count: int
 
-    :returns: list -- A list of readings
-    :returns: int -- Error Code 705
+    :returns: list -- A list of readings or None
 
     """
     if not m_id in self.module_ids:

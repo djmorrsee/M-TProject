@@ -1,9 +1,7 @@
-// The front end is subject to a rework                      //
-// Data formats have changed, breaking all these functions   //
-// Shoul take full advantage of the new REST API             //
 
 $.jqplot.config.enablePlugins = true;
 
+// Document Ready, Perform DOM Actions
 $(document).ready(function () {
 
   URL = '/all/'
@@ -16,16 +14,63 @@ $(document).ready(function () {
 
       for (var i = 0; i < c; ++i) {
         dataset = parsed_data[i]
+        CreateTableEntry(dataset)
+
         generated_lines = CreateLinesForModule(dataset)
 
         lines.push(generated_lines[0])
         lines.push(generated_lines[1])
       }
 
-      var options = GetPlotDict()
+      var options = GetPlotDict(c)
       $.jqplot('test-chart', lines, options);
+
+      // The plot will not draw correctly if the panel is hidden //
+      // $('#hist-panel').collapse('hide')
+
     })
+
+
+  var hist_showing = false;
+  $("#hist-btn").click(function () {
+    if (hist_showing) {
+      // Do Nothing
+    } else {
+      $('#hist-panel').collapse('toggle')
+      $('#current-panel').collapse('toggle')
+      hist_showing = !hist_showing
+    }
+  });
+
+  $("#current-btn").click(function () {
+    if (hist_showing) {
+      $('#hist-panel').collapse('toggle')
+      $('#current-panel').collapse('toggle')
+      hist_showing = !hist_showing
+    } else {
+      // Do Nothing
+    }
+  });
+
 });
+
+
+
+
+// Defined Functions
+function CreateTableEntry(m_data) {
+  var m_id = m_data['module_id']
+  var count = m_data['reading_count']
+
+  if (count > 0) {
+    var light = m_data['light'][0]
+    var temp = m_data['temperature'][0]
+    var time = m_data['times'][0]
+    var r_html = GenerateReadingHTML(m_id, temp, light, time)
+    // Inject it into our table //
+    $("#reading-table").append(r_html)
+  }
+}
 
 function CreateLinesForModule(m_data) {
   var m_id = m_data['module_id']
@@ -40,6 +85,7 @@ function CreateLinesForModule(m_data) {
   var temp_line = []
 
   for (var c = 0; c < count; ++c) {
+
     var time_stamp = time_array[c] * 1000
     var light_point = [time_stamp, light_array[c]]
     var temp_point = [time_stamp, temp_array[c]]
@@ -51,58 +97,21 @@ function CreateLinesForModule(m_data) {
   return [light_line, temp_line]
 }
 
-
-
-
-function FillTable (d) {
-  readings = []
-  for (var m_key in d) {
-    var module = d[m_key]
-    var light = module['light']
-    var temp = module['temp']
-
-    var light_v = light['ys'][0]
-    var temp_v = temp['ys'][0]
-
-    readings.push(GenerateReadingHTML(m_key, temp_v, light_v))
-  }
-  $("#reading-table").append(readings)
-}
-
-function BuildPlot (d) {
-  lines = []
-  for(var m_key in d) {
-
-    var module = d[m_key]
-    var light = module['light']
-    var temp = module['temp']
-
-    var light_line = []
-    var temp_line = []
-
-    for(var i = 0; i < light['ys'].length; ++i) {
-
-      var light_point = [light['xs'][i] * 1000, light['ys'][i]]
-      var temp_point = [temp['xs'][i] * 1000, temp['ys'][i]]
-
-      light_line.push(light_point)
-      temp_line.push(temp_point)
-
-    }
-
-    lines.push(light_line)
-    lines.push(temp_line)
-
-  }
-
-  var options = GetPlotDict()
-  $.jqplot('test-chart', lines, options);
-}
-
-function GenerateReadingHTML (m_key, temp, light) {
+function GenerateReadingHTML (m_key, temp, light, time) {
 
   var keyString = "<div class='col-xs-3'><p>" + m_key.toString() + "</p></div>"
-  var tempString = "<div class='col-xs-4'><p>" + temp.toFixed(1) + " degrees F</p></div>"
-  var lightString = "<div class='col-xs-4'><p>" + light.toFixed(1) + "% </p></div>"
-  return keyString + tempString + lightString
+  var tempString = "<div class='col-xs-3'><p>" + temp.toFixed(1) + " degrees F</p></div>"
+  var lightString = "<div class='col-xs-3'><p>" + light.toFixed(1) + "% </p></div>"
+
+  var date = new Date(time)
+  var day = date.getDate()
+  var hour = date.getHours()
+  var minute = date.getMinutes()
+  var second = date.getSeconds()
+
+
+
+  var timeString = "<div class='col-xs-3'><p>" + date.toLocaleTimeString() + " </p></div>"
+
+  return keyString + tempString + lightString + timeString
 }
