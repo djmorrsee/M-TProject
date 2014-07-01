@@ -4,14 +4,13 @@ auth_ids = []
 
 def BuildAuthIDs():
 	this_directory = os.path.dirname(__file__)
+	auth_file = os.path.join(this_directory, 'auth_file.txt')
+	with open(auth_file, 'r') as f:
+		for _id in f.readlines():
+			if(_id != ''):
+				auth_ids.append(int(_id)) # Note int
+		f.close()
 
-	with open(os.path.join(this_directory, 'auth_file.txt'), 'r') as auth_file:
-
-		auth_ids = []
-		for _id in auth_file.readlines():
-			auth_ids.append(_id)
-
-		auth_file.close()
 
 def VerifyAuthData(data):
 	return data.keys() == ["auth_id"]

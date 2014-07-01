@@ -2,6 +2,7 @@
 
   This file contains functions for converting module data into meaningful information
 """
+import datetime, time
 
 VOLTAGE = 3.3
 
@@ -74,7 +75,7 @@ def MakeTimeStamp():
 
   :returns: UTC/POSIX Time Stamp -- Assumes time zones don't change.
   """
-  return time.mktime(datetime.now().timetuple())
+  return time.mktime(datetime.datetime.now().timetuple())
 
 def GetLocalTimeString(utc_stamp):
   """ Helper Method To Get a datetime object from utc stamp
@@ -82,4 +83,4 @@ def GetLocalTimeString(utc_stamp):
   :param utc_stamp: UTC/POSIX Time Stamp
   :type utc_stamp: float
   """
-  return datetime.fromtimestamp(utc_stamp)
+  return datetime.datetime.fromtimestamp(utc_stamp)

@@ -1,13 +1,10 @@
 var FONT_CONST = 'Arial, Sans-Serif'
 var FONT_COLOR_01 = '#000'
 
-function GetPlotDict () {
-  console.log('Building Graph Dictionary')
+function GetPlotDict (module_num) {
+  console.log('Building Graph Dictionary For ' + module_num.toString() + ' Modules')
   return {
     title:FormatTitle(),
-
-
-    seriesColors:['#F00', '#00F'],
 
     axesDefaults : FormatAxesDefaults(),
     axes:FormatAxes(),
@@ -15,7 +12,7 @@ function GetPlotDict () {
 
 
     seriesDefaults:FormatSeriesDefaults(),
-    series:FormatSeries(),
+    series:FormatSeries(module_num),
 
     cursor:FormatCursor(),
     legend:FormatLegend(),
@@ -42,7 +39,6 @@ function FormatGrid () {
 function FormatAxesDefaults () {
   return {
     syncTicks:true,
-    useSeriesColor:true,
 
     pad:1.1,
 
@@ -119,24 +115,41 @@ function FormatSeriesDefaults () {
   }
 }
 
-function FormatSeries () {
-  function _FormatSeries(isTempLine) {
-    if (isTempLine) {
-      return {
-        label:'Temp',
-        yaxis:'yaxis',
+// Legend Label Should be M_ID
+function FormatSeries (module_num) {
+  Math.seedrandom("djmorrsee<3elephants")
 
-      }
-    } else {
-      return {
-        label:'Light',
-        yaxis:'y2axis',
+  function _FormatSeries(isTempLine, mod_num, color) {
+    var axis_label = ((isTempLine) ? 'yaxis' : 'y2axis')
+    var label_label = mod_num.toString() + ((isTempLine) ? ' Temperature' : ' Light Intensity')
+
+    if (isTempLine) {
+      for (var i = 0; i < color.length; ++i) {
+        color[i] = parseInt(color[i] / 2)
       }
     }
+
+    var color_label = 'rgba(' + color[0] + ', ' + color[1] + ', ' + color[2] + ', 1)'
+
+    return {
+      label:label_label,
+      yaxis:axis_label,
+      color:color_label
+    }
   }
+
   series = []
-  for (i = 0; i < 20; ++i) {
-    series.push(_FormatSeries(i % 2 == 1))
+  var x, y, z, c
+  for (i = 0; i < module_num * 2; ++i) {
+    if (i % 2 == 0) {
+      x = parseInt(Math.random() * 255)
+      y = parseInt(Math.random() * 255)
+      z = parseInt(Math.random() * 255)
+      c = [x, y, z]
+    }
+
+
+    series.push(_FormatSeries(i % 2 == 1, parseInt(i / 2) + 1, c))
   }
   return series
 }
@@ -162,12 +175,9 @@ function FormatHighlighter () {
 function FormatLegend () {
   return {
     show:true,
-    location:'e',
+    location:'n',
     placement:'outsideGrid',
     renderer:$.jqplot.EnhancedLegendRenderer,
-    rowSpacing:'2em',
-    border:'none',
-    marginBottom:'75px',
     fontSize:'12pt',
     textColor:FONT_COLOR_01,
   }

@@ -1,7 +1,6 @@
 
 $.jqplot.config.enablePlugins = true;
 
-
 // Document Ready, Perform DOM Actions
 $(document).ready(function () {
 
@@ -15,7 +14,6 @@ $(document).ready(function () {
 
       for (var i = 0; i < c; ++i) {
         dataset = parsed_data[i]
-
         CreateTableEntry(dataset)
 
         generated_lines = CreateLinesForModule(dataset)
@@ -24,9 +22,11 @@ $(document).ready(function () {
         lines.push(generated_lines[1])
       }
 
-      var options = GetPlotDict()
+      var options = GetPlotDict(c)
       $.jqplot('test-chart', lines, options);
-      $('#hist-panel').collapse('hide')
+
+      // The plot will not draw correctly if the panel is hidden //
+      // $('#hist-panel').collapse('hide')
 
     })
 
@@ -65,8 +65,8 @@ function CreateTableEntry(m_data) {
   if (count > 0) {
     var light = m_data['light'][0]
     var temp = m_data['temperature'][0]
-
-    var r_html = GenerateReadingHTML(m_id, temp, light)
+    var time = m_data['times'][0]
+    var r_html = GenerateReadingHTML(m_id, temp, light, time)
     // Inject it into our table //
     $("#reading-table").append(r_html)
   }
@@ -97,10 +97,21 @@ function CreateLinesForModule(m_data) {
   return [light_line, temp_line]
 }
 
-function GenerateReadingHTML (m_key, temp, light) {
+function GenerateReadingHTML (m_key, temp, light, time) {
 
   var keyString = "<div class='col-xs-3'><p>" + m_key.toString() + "</p></div>"
-  var tempString = "<div class='col-xs-4'><p>" + temp.toFixed(1) + " degrees F</p></div>"
-  var lightString = "<div class='col-xs-4'><p>" + light.toFixed(1) + "% </p></div>"
-  return keyString + tempString + lightString
+  var tempString = "<div class='col-xs-3'><p>" + temp.toFixed(1) + " degrees F</p></div>"
+  var lightString = "<div class='col-xs-3'><p>" + light.toFixed(1) + "% </p></div>"
+
+  var date = new Date(time)
+  var day = date.getDate()
+  var hour = date.getHours()
+  var minute = date.getMinutes()
+  var second = date.getSeconds()
+
+
+
+  var timeString = "<div class='col-xs-3'><p>" + date.toLocaleTimeString() + " </p></div>"
+
+  return keyString + tempString + lightString + timeString
 }
