@@ -65,7 +65,7 @@ function CreateTableEntry(m_data) {
   if (count > 0) {
     var light = m_data['light'][0]
     var temp = m_data['temperature'][0]
-    var time = m_data['times'][0]
+    var time = m_data['times'][0] * 1000
     var r_html = GenerateReadingHTML(m_id, temp, light, time)
     // Inject it into our table //
     $("#reading-table").append(r_html)
