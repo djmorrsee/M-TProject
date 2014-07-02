@@ -90,7 +90,7 @@ def drop_old_data():
   if not AuthorizeAuthData(data):
     return SC.BadAuth()
 
-  return json.dumps(db_actor.DropOldData(6))
+  return json.dumps(db_actor.DropOldData(24))
 
 ## Scripts Routes ##
 # These routes are helper methods for loading static js files on our web page
