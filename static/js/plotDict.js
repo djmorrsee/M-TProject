@@ -76,7 +76,9 @@ function FormatAxes () {
       show:true,
       label:'Temperature (degrees F)',
       labelRenderer:$.jqplot.CanvasAxisLabelRenderer,
-
+      min:20,
+      max:150,
+      autoscale:true
     },
 
     y2axis:
