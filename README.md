@@ -1,32 +1,70 @@
-Methods and Tools Project
+Methods and Tools Project Summer 2014
 =========================
 
-## Daniel Morrissey and Andrey Shprengel
+###Daniel Morrissey and Andrey Shprengel
 
-### About
+## Project Repositories
 
-We are aiming to develop a system of 'modules,' which are microcontrollers equipped
-with temperature and light sensors. These modules will take their readings and send them
-to a centralized server. The server, along with simply storing the data, will
-be in charge of presenting a web site for monitoring the module data.
+### The Server Repo
+
+>- https://github.com/djmorrsee/M-TProject
+
+This is the repository for the flask server.
+
+### The Duino Repo
+
+>- https://github.com/djmorrsee/python-pcduino
+
+This is the Arduino deployment repo. This repo was originally forked from
+https://github.com/pcduino/python-pcduino
+
+### Documentation
+
+>- https://github.com/djmorrsee/mtdocs
+
+The documentation for the repositories can be found at the above url. Built
+using Sphinx-Doc. We felt providing the documentation would be easier than giving
+build instructions for both repositories.
+
+## Running Requirements
+
+### Server:
+
+Run:
+
+>- python server
+
+API:
+
+	/all/ 				- GET - Retrieve all data
+	/module/ 	 		- GET - Retrieve data for module
+	/module/<id>/ 		- GET/POST/DELETE - List, register or remove a module
+	/module/post_reading/ - POST - Module data posting route
+	/drop/				- DELETE - Drop old data from table
+	/reset/	 	 	 - DELETE - Reset the entire table
+
+Required Python Libraries:
+
+>- flask
+>- sqlalchemy
+>- flask-sqlalchemy
+>- requests
+
+### Dunio:
+
+Run:
+
+>- python register_module
+>- python unregister_module
+>- python take_reading
+>- python reset_table
 
 
-### The Server - Website
+Required Python Libraries:
 
-The current plan is to use a python Flask server to handle the website
+>- requests
 
-Typical HTML5 suite for website (HTML, CSS, JQuery, Bootstrap CSS framework)
+Other Requirements:
 
-For graphing our data on the web page, we have chosen this jQuery based library:
-
->- http://www.jqplot.com/
-
-### The Server - Storage
-
-Flask/Python couples well with sqlite3 or sqlalchemy
-
-### The Modules
-
-The pcDuinos will be programmed in Python 
-
-The act of sending the data from the module to the server will be done in python.
+>- Needs to be run on a duino.
+>- Needs a constants.py in bin/util. Ignored for security reasons
